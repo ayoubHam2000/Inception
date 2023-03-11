@@ -1,9 +1,19 @@
-FROM debian
+FROM debian:buster
 
-RUN apt update
-RUN apt upgrade -y
-RUN apt install vim -y
-RUN apt install wget -y
-RUN apt install mariadb-server -y
+RUN apt update && \
+    apt upgrade -y && \
+    apt install sudo -y && \
+    apt install mariadb-server -y
 
+RUN apt install vim -y && \
+    apt install wget -y && \
+    apt install iputils-ping -y && \
+    apt install curl -y && \
+    apt install procps -y
 
+COPY ./conf/script.sh /tmp
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d
+RUN chmod +x /tmp/script.sh
+
+CMD ./tmp/script.sh
+#CMD tail -f;

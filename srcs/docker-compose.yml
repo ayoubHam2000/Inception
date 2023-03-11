@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+    nginx:
+        build: ./requirements/nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        networks:
+            - docker_network
+        depends_on:
+            - wordpress
+        volumes:
+            - "wordpress:/var/www/aben-ham.42.fr/html"
+        init : true
+        #restart: always
+    wordpress:
+        build: ./requirements/wordpress
+        volumes:
+            - "wordpress:/var/www/aben-ham.42.fr/html"
+        networks:
+            - docker_network
+        env_file:
+            - .env
+        depends_on:
+            - mariadb
+        init : true
+    mariadb:
+        build: ./requirements/mariadb
+        volumes:
+            - "db:/var/lib/mysql"
+        networks:
+            - docker_network
+        env_file:
+            - .env
+        init : true
+
+volumes:
+    wordpress:
+    db:
+
+networks:
+    docker_network:
