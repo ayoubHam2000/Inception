@@ -3,6 +3,7 @@ version: "3"
 services:
     nginx:
         build: ./requirements/nginx
+        container_name: nginx
         ports:
             - "80:80"
             - "443:443"
@@ -10,30 +11,100 @@ services:
             - docker_network
         depends_on:
             - wordpress
+            - adminer
+            - converter
+            - staticgame
         volumes:
             - "wordpress:/var/www/aben-ham.42.fr/html"
         init : true
-        #restart: always
+        restart: always
     wordpress:
         build: ./requirements/wordpress
+        container_name: wordpress
         volumes:
             - "wordpress:/var/www/aben-ham.42.fr/html"
         networks:
             - docker_network
-        env_file:
-            - .env
+        environment:
+            WORDPRESS_URL: ${WORDPRESS_URL}
+            WORDPRESS_TITLE: ${WORDPRESS_TITLE}
+            WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+            WORDPRESS_ADMIN: ${WORDPRESS_ADMIN}
+            WORDPRESS_ADMIN_PASSWORD: ${WORDPRESS_ADMIN_PASSWORD}
+            WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL}
+            WORDPRESS_USER: ${WORDPRESS_USER}
+            WORDPRESS_USER_PASSWORD: ${WORDPRESS_USER_PASSWORD}
+            WORDPRESS_USER_EMAIL: ${WORDPRESS_USER_EMAIL}
+            MYSQL_DB_NAME: ${MYSQL_DB_NAME}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_ADMIN: ${MYSQL_ADMIN}
+            MYSQL_ADMIN_PASSWORD: ${MYSQL_ADMIN_PASSWORD}
         depends_on:
             - mariadb
+            - redis
         init : true
+        restart: always
     mariadb:
         build: ./requirements/mariadb
+        container_name: mariadb
         volumes:
             - "db:/var/lib/mysql"
         networks:
             - docker_network
-        env_file:
-            - .env
+        environment:
+            MYSQL_DB_NAME: ${MYSQL_DB_NAME}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_ADMIN: ${MYSQL_ADMIN}
+            MYSQL_ADMIN_PASSWORD: ${MYSQL_ADMIN_PASSWORD}
         init : true
+        restart: always
+    redis:
+        build: ./requirements/bonus/redis
+        container_name: redis
+        networks:
+            - docker_network
+        init : true
+        restart: always
+    staticgame:
+        build: ./requirements/bonus/staticgame
+        container_name: staticgame
+        networks:
+            - docker_network
+        init : true
+        restart: always
+    converter:
+        build: ./requirements/bonus/converter
+        container_name: converter
+        networks:
+            - docker_network
+        # ports:
+        #     - "3002:3002"
+        #     - "3001:3001"
+        environment:
+            VITE_DOMAIN: ${VITE_DOMAIN}
+        init: true
+        restart: always
+    adminer:
+        build: ./requirements/bonus/adminer
+        container_name: adminer
+        networks:
+            - docker_network
+        depends_on:
+            - mariadb
+        init: true
+        restart: always
+    ftp:
+        build: ./requirements/bonus/ftp
+        container_name: ftp
+        depends_on:
+            - wordpress
+        volumes:
+            - "wordpress:/var/www/aben-ham.42.fr/html"
+        ports:
+            - "21:21"
+            - "21100-21110:21100-21110"
+        init: true
+        restart: always
 
 volumes:
     wordpress:
