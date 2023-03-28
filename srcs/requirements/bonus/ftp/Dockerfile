@@ -1,11 +1,10 @@
 FROM debian:buster
 
 RUN apt update && \
-    apt upgrade -y
+    apt upgrade -y && \
+    apt install vsftpd -y && \
+    apt install curl -y
 
-RUN apt install vsftpd -y 
-
-RUN apt install curl -y
 
 COPY ./config/vsftpd.conf /etc/vsftpd.conf
 

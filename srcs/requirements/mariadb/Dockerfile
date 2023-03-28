@@ -11,9 +11,8 @@ RUN apt install vim -y && \
     apt install curl -y && \
     apt install procps -y
 
-COPY ./conf/script.sh /tmp
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d
+COPY ./tools/script.sh /tmp
 RUN chmod +x /tmp/script.sh
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d
 
 CMD ./tmp/script.sh
-#CMD tail -f;

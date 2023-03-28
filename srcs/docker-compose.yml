@@ -107,8 +107,19 @@ services:
         restart: always
 
 volumes:
-    wordpress:
-    db:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/aben-ham/.1337/projects/inception/data/wordpress
+      o: bind
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/aben-ham/.1337/projects/inception/data/db
+      o: bind
+
 
 networks:
     docker_network:

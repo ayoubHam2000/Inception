@@ -9,12 +9,11 @@ RUN apt install vim -y && \
     apt install curl -y && \
     apt install procps -y
 
-RUN apt install ffmpeg -y
+RUN apt install ffmpeg -y && \
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt install nodejs -y && \
+    npm install -g nodemon
 
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-
-RUN apt install nodejs -y
-RUN npm install -g nodemon
 
 COPY ./ConverterApp /var/www/ConverterApp
 WORKDIR /var/www/ConverterApp/FrontEnd

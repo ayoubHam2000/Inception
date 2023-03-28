@@ -2,7 +2,6 @@ FROM debian:buster
 
 RUN apt update && \
     apt upgrade -y && \
-    apt install sudo -y && \
     apt install php7.3-fpm php7.3-mysql -y
 
 RUN apt install vim -y && \
@@ -37,11 +36,6 @@ USER root
 WORKDIR /
 
 
-
-# sudo -u aben-ham.42.fr wp config create --dbname="$MYSQL_DB_NAME" --dbuser="$MYSQL_ADMIN" --dbpass="$MYSQL_ADMIN_PASSWORD" --dbhost="mariadb"
-# sudo -u aben-ham.42.fr wp config create --dbname=wordpress --dbuser=zeus --dbpass=zeus_pass --dbhost=mariadb
-# sudo -u aben-ham.42.fr wp core install --url=aben-ham.42.fr --title="Fox" --admin_user="aben-ham" --admin_password="123456" --admin_email="aben-ham@student.1337.ma"
-# sudo -u aben-ham.42.fr wp core install --url="$WORDPRESS_URL" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN" --admin_password="$WORDPRESS_PASS" --admin_email="$WORDPRESS_ADMIN_EMAIL"
 COPY ./tools/wordpress.sh /home
 #CMD tail -f
 CMD su aben-ham.42.fr -c '/bin/bash /home/wordpress.sh';php-fpm7.3 -F -R
