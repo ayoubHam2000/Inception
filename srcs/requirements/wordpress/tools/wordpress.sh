@@ -18,6 +18,7 @@ do
 	fi
 done
 wp core install --url="$WORDPRESS_URL" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL"
+echo "WordPress has been installed url=$WORDPRESS_URL title=$WORDPRESS_TITLE admin_user=$WORDPRESS_ADMIN admin_password=$WORDPRESS_ADMIN_PASSWORD admin_email=$WORDPRESS_ADMIN_EMAIL"
 wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_EMAIL" --role=author --user_pass="$WORDPRESS_USER_PASSWORD"
 wp plugin install redis-cache --activate
 wp redis enable

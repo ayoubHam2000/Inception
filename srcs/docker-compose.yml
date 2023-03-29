@@ -5,7 +5,7 @@ services:
         build: ./requirements/nginx
         container_name: nginx
         ports:
-            - "80:80"
+            #- "80:80"
             - "443:443"
         networks:
             - docker_network
@@ -13,7 +13,7 @@ services:
             - wordpress
             - adminer
             - converter
-            - staticgame
+            - staticwebsite
         volumes:
             - "wordpress:/var/www/aben-ham.42.fr/html"
         init : true
@@ -65,9 +65,9 @@ services:
             - docker_network
         init : true
         restart: always
-    staticgame:
-        build: ./requirements/bonus/staticgame
-        container_name: staticgame
+    staticwebsite:
+        build: ./requirements/bonus/staticwebsite
+        container_name: staticwebsite
         networks:
             - docker_network
         init : true
@@ -103,6 +103,9 @@ services:
         ports:
             - "21:21"
             - "21100-21110:21100-21110"
+        environment:
+            FTP_USR: ${FTP_USR}
+            FTP_PWD: ${FTP_PWD}
         init: true
         restart: always
 
@@ -111,13 +114,13 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/aben-ham/.1337/projects/inception/data/wordpress
+      device: /home/aben-ham/data/wordpress
       o: bind
   db:
     driver: local
     driver_opts:
       type: none
-      device: /Users/aben-ham/.1337/projects/inception/data/db
+      device: /home/aben-ham/data/db
       o: bind
 
 
