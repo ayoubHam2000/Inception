@@ -1,28 +1,20 @@
 #!/bin/bash
-
-killall -15 mysqld
-killall -15 mysqld_safe
-
-mysqld_safe --skip-grant-tables --skip-networking & (\
-    sleep 3;
+service mysql start
     
-    mysql -u root -e "FLUSH PRIVILEGES;"
+mysql -h localhost -u root -e "FLUSH PRIVILEGES;"
 
-    mysql -u root -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DB_NAME;"
-    
-    #mysql -u root -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
-    #GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$MYSQL_USER'@'%'"
-    
-    mysql -u root -e "CREATE USER IF NOT EXISTS '$MYSQL_ADMIN'@'%' IDENTIFIED BY '$MYSQL_ADMIN_PASSWORD';\
-    GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$MYSQL_ADMIN'@'%'"
+mysql -h localhost -u root -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DB_NAME;"
 
-    mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
-    
-    killall -15 mysqld;
-    killall -15 mysqld_safe;
-    ) &> /dev/null;
+#mysql -u root -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
+#GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$MYSQL_USER'@'%'"
 
-echo "Starting mariadb ..."
-wait
-echo "Done."
-mysqld_safe
+mysql -h localhost -u root -e "CREATE USER IF NOT EXISTS '$MYSQL_ADMIN'@'%' IDENTIFIED BY '$MYSQL_ADMIN_PASSWORD';\
+GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$MYSQL_ADMIN'@'%'"
+
+mysql -h localhost -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
+    
+pkill mysql
+
+echo "Starting mariadb ... Done"
+
+mysqld

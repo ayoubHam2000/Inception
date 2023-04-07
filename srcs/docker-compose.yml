@@ -5,7 +5,6 @@ services:
         build: ./requirements/nginx
         container_name: nginx
         ports:
-            #- "80:80"
             - "443:443"
         networks:
             - docker_network
@@ -106,6 +105,8 @@ services:
         environment:
             FTP_USR: ${FTP_USR}
             FTP_PWD: ${FTP_PWD}
+        networks:
+            - docker_network
         init: true
         restart: always
 
